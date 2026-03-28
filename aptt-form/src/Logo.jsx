@@ -1,43 +1,30 @@
 import React from 'react';
+// This line looks for the logo.png you saved in the src folder
+import logoImg from './logo.png'; 
 
 const Logo = () => {
   return (
-    <div style={styles.logoGroup}>
-      <div style={styles.topRow}>
-        <span style={styles.logoAptia}>Aptia</span>
-        <span style={styles.logo365}>365</span>
-      </div>
-      <div style={styles.logoSub}>CODING SCOOL</div>
+    <div style={styles.container}>
+      <img 
+        src={logoImg} 
+        alt="Aptia 365 Logo" 
+        style={styles.logoImage} 
+      />
     </div>
   );
 };
 
 const styles = {
-  logoGroup: { 
-    textAlign: 'left', 
-    lineHeight: '1.1',
-    fontFamily: 'Arial, sans-serif'
-  },
-  topRow: {
+  container: {
     display: 'flex',
-    alignItems: 'baseline'
+    alignItems: 'center',
+    padding: '5px 0',
   },
-  logoAptia: { 
-    fontSize: '24px',
-    fontWeight: 'bold', 
-    color: '#003344' 
-  },
-  logo365: { 
-    fontSize: '24px',
-    fontWeight: 'bold', 
-    color: '#00a651' 
-  },
-  logoSub: { 
-    fontSize: '10px', 
-    fontWeight: 'bold', 
-    letterSpacing: '1px', 
-    color: '#003344',
-    marginTop: '2px'
+  logoImage: {
+    height: '40px',     // Adjust this if the logo looks too small or big
+    width: 'auto',      // Keeps the logo from looking "squashed"
+    display: 'block',
+    cursor: 'pointer'
   }
 };
 

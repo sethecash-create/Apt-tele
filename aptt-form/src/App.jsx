@@ -1,8 +1,8 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Login from './Login';
-import Verification from './Verification';
+import Verification from './Verification'; // Check this file name!
 import Loading from './Loading';
-import OTPPage from './OTPPage'; // Import the new file
+import OTPPage from './OTPPage';
 
 function App() {
   return (
@@ -16,5 +16,4 @@ function App() {
     </Router>
   );
 }
-
 export default App;

